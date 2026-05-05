@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Ozon Analytics Pro — Универсальная аналитика</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f0f2f5;
+            color: #1e1f22;
+            line-height: 1.4;
+        }
+
+        /* Анимации */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .page-content {
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* Header */
+        .main-header {
+            background: white;
+            padding: 16px 24px;
+            border-radius: 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, #0b2b26, #1b6b5e);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .mode-controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .mode-switch {
+            display: flex;
+            gap: 8px;
+            background: #f0f2f5;
+            padding: 4px;
+            border-radius: 50px;
+        }
+
+        .mode-btn {
+            padding: 8px 20px;
+            border-radius: 40px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .mode-btn.demo {
+            background: #ff9800;
+            color: white;
+        }
+
+        .mode-btn.real {
+            background: #e0e7e5;
+            color: #1e4a44;
+        }
+
+        .mode-btn.active-mode {
+            background: #1b6b5e;
+            color: white;
+            box-shadow: 0 2px 8px rgba(27,107,94,0.3);
+        }
+
+        .status-badge {
+            background: #e8f0ed;
+            border-radius: 40px;
+            padding: 8px 18px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Navigation */
+        .nav-container {
+            background: white;
+            border-radius: 20px;
+            padding: 8px;
+            margin-bottom: 24px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 12px 24px;
+            border-radius: 16px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn.active {
+            background: #1b6b5e;
+            color: white;
+        }
+
+        /* Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .stat-card h4 {
+            font-size: 0.85rem;
+            color: #5e7c76;
+            margin-bottom: 12px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #0b2b26;
+        }
+
+        /* Auth Card */
+        .auth-card {
+            background: linear-gradient(135deg, #ffffff, #f9fbfa);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid #e0e8e5;
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e8e5;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #1b6b5e;
+        }
+
+        button {
+            background: #1b6b5e;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            background: #0f4d43;
+            transform: translateY(-1px);
+        }
+
+        button.secondary {
+            background: #eef2f1;
+            color: #1e4a44;
+        }
+
+        button.danger {
+            background: #dc3545;
+        }
+
+        /* Таблицы */
+        .data-table {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px 8px;
+            text-align: left;
+            border-bottom: 1px solid #edf2ef;
+        }
+
+        th {
+            font-weight: 600;
+            color: #2b594f;
+        }
+
+        /* Тестирование API */
+        .test-result {
+            margin-top: 12px;
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+        }
+
+        .test-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .test-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .test-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        canvas {
+            max-height: 300px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #1b6b5e;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 12px;
+            margin: 12px 0;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #8ba39c;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 768px) {
+            .main-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .nav-container {
+                justify-content: center;
+            }
+            .nav-btn span {
+                display: none;
+            }
+            .nav-btn i {
+                font-size: 1.2rem;
+            }
+            .nav-btn {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div style="max-width: 1400px; margin: 0 auto; padding: 20px;">
+        <!-- Header -->
+        <div class="main-header">
+            <div class="logo">
+                <h1><i class="fas fa-chart-line"></i> Ozon Analytics Pro</h1>
+                <p style="font-size: 0.8rem; color: #5e7c76;">Универсальная аналитика для продавцов</p>
+            </div>
+            <div class="mode-controls">
+                <div class="mode-switch">
+                    <button class="mode-btn demo" id="demoModeMain">🎮 Демо-режим</button>
+                    <button class="mode-btn real" id="realModeMain">🔌 Реальный API</button>
+                </div>
+                <div class="status-badge" id="statusBadge">
+                    <i class="fas fa-flask"></i> Демо-режим
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-container">
+            <button class="nav-btn active" data-page="dashboard">
+                <i class="fas fa-tachometer-alt"></i> <span>Дашборд</span>
+            </button>
+            <button class="nav-btn" data-page="products">
+                <i class="fas fa-boxes"></i> <span>Товары</span>
+            </button>
+            <button class="nav-btn" data-page="orders">
+                <i class="fas fa-shopping-cart"></i> <span>Заказы</span>
+            </button>
+            <button class="nav-btn" data-page="finance">
+                <i class="fas fa-coins"></i> <span>Финансы</span>
+            </button>
+            <button class="nav-btn" data-page="settings">
+                <i class="fas fa-cog"></i> <span>Настройки</span>
+            </button>
+        </div>
+
+        <!-- Settings Page (API настройки) -->
+        <div id="settingsPage" class="page-content" style="display: none;">
+            <div class="auth-card">
+                <h2><i class="fas fa-key"></i> Настройка API Ozon</h2>
+                <p style="margin: 10px 0; color: #5e7c76;">Введите данные из кабинета продавца Ozon</p>
+
+                <div class="input-group">
+                    <label>Client ID</label>
+                    <input type="text" id="clientId" placeholder="Например: 123456">
+                </div>
+                <div class="input-group">
+                    <label>API Key</label>
+                    <input type="password" id="apiKey" placeholder="Ваш API-ключ">
+                </div>
+
+                <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px;">
+                    <button id="testApiBtn"><i class="fas fa-vial"></i> Тестировать API ключи</button>
+                    <button id="saveApiBtn"><i class="fas fa-save"></i> Сохранить</button>
+                    <button id="clearApiBtn" class="secondary"><i class="fas fa-trash"></i> Очистить</button>
+                </div>
+
+                <div id="apiTestResult"></div>
+
+                <div style="margin-top: 20px; padding: 16px; background: #e8f0ed; border-radius: 12px;">
+                    <h4><i class="fas fa-question-circle"></i> Как получить API ключи?</h4>
+                    <ol style="margin-left: 20px; margin-top: 10px;">
+                        <li>Войдите в кабинет продавца Ozon (seller.ozon.ru)</li>
+                        <li>Перейдите: Настройки → API ключи → Seller API</li>
+                        <li>Нажмите "Сгенерировать ключ"</li>
+                        <li>Скопируйте Client ID и API Key</li>
+                        <li>Вставьте их выше и нажмите "Тестировать"</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Page -->
+        <div id="dashboardPage" class="page-content">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h4><i class="fas fa-cubes"></i> Всего товаров</h4>
+                    <div class="stat-number" id="totalProducts">—</div>
+                </div>
+                <div class="stat-card">
+                    <h4><i class="fas fa-truck"></i> Активные заказы</h4>
+                    <div class="stat-number" id="activeOrders">—</div>
+                </div>
+                <div class="stat-card">
+                    <h4><i class="fas fa-ruble-sign"></i> Оборот (месяц)</h4>
+                    <div class="stat-number" id="totalRevenue">—</div>
+                </div>
+            </div>
+            <div class="chart-container">
+                <canvas id="salesChart"></canvas>
+                <p style="text-align: center; margin-top: 12px; font-size: 0.8rem;" id="chartNote">
+                    📊 Динамика продаж
+                </p>
+            </div>
+            <div class="data-table">
+                <h3><i class="fas fa-history"></i> Последние операции</h3>
+                <div id="recentActivity"></div>
+            </div>
+        </div>
+
+        <!-- Products Page -->
+        <div id="productsPage" class="page-content" style="display: none;">
+            <div class="data-table">
+                <div style="margin-bottom: 16px;">
+                    <input type="text" id="productSearch" placeholder="🔍 Поиск товаров..." style="width: 100%; padding: 12px; border: 2px solid #e0e8e5; border-radius: 12px;">
+                </div>
+                <div id="productsList"></div>
+            </div>
+        </div>
+
+        <!-- Orders Page -->
+        <div id="ordersPage" class="page-content" style="display: none;">
+            <div class="data-table">
+                <select id="orderStatus" style="width: 100%; padding: 12px; margin-bottom: 16px; border: 2px solid #e0e8e5; border-radius: 12px;">
+                    <option value="awaiting_packaging">⏳ Ожидают упаковки</option>
+                    <option value="awaiting_deliver">📦 Готовы к отгрузке</option>
+                    <option value="delivered">✅ Доставленные</option>
+                    <option value="cancelled">❌ Отменённые</option>
+                </select>
+                <div id="ordersList"></div>
+            </div>
+        </div>
+
+        <!-- Finance Page -->
+        <div id="financePage" class="page-content" style="display: none;">
+            <div class="stats-grid" style="grid-template-columns: 1fr 1fr;">
+                <div class="stat-card">
+                    <h4>💰 К выплате</h4>
+                    <div class="stat-number" id="payoutAmount">—</div>
+                </div>
+                <div class="stat-card">
+                    <h4>📊 Всего операций</h4>
+                    <div class="stat-number" id="operationsCount">—</div>
+                </div>
+            </div>
+            <div class="data-table">
+                <h3>📋 Движение средств</h3>
+                <div id="transactionsList"></div>
+            </div>
+        </div>
+
+        <footer>
+            <i class="fas fa-shield-alt"></i> API ключи хранятся только в вашем браузере |
+            <i class="fas fa-github"></i> Бесплатно для всех продавцов Ozon
+        </footer>
+    </div>
+
+    <script>
+        // ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
+        let currentMode = 'demo'; // demo or real
+        let apiCredentials = { clientId: '', apiKey: '' };
+        let salesChart = null;
+
+        // ========== ДЕМО ДАННЫЕ ==========
+        const demoData = {
+            products: [
+                { id: 1001, offer_id: "IPHONE-14", name: "iPhone 14 Pro", price: 89990, stock: 15 },
+                { id: 1002, offer_id: "SAMSUNG-S23", name: "Samsung Galaxy S23", price: 74990, stock: 23 },
+                { id: 1003, offer_id: "XIAOMI-12", name: "Xiaomi 12 Pro", price: 59990, stock: 31 },
+                { id: 1004, offer_id: "HUAWEI-P50", name: "Huawei P50 Pro", price: 69990, stock: 8 },
+                { id: 1005, offer_id: "HEADPHONES-X", name: "Наушники Wireless X", price: 4990, stock: 67 },
+                { id: 1006, offer_id: "POWERBANK-20K", name: "Power Bank 20000mAh", price: 2990, stock: 120 }
+            ],
+            orders: {
+                awaiting_packaging: [
+                    { number: "POST-1001", total: 89990, date: "2026-05-05", customer: "Иван Петров" },
+                    { number: "POST-1002", total: 74990, date: "2026-05-05", customer: "Мария Сидорова" }
+                ],
+                awaiting_deliver: [
+                    { number: "POST-0995", total: 59990, date: "2026-05-04", customer: "Алексей Смирнов" }
+                ],
+                delivered: [
+                    { number: "POST-0988", total: 69990, date: "2026-05-03", customer: "Елена Козлова" },
+                    { number: "POST-0985", total: 4990, date: "2026-05-02", customer: "Дмитрий Новиков" }
+                ],
+                cancelled: []
+            },
+            transactions: [
+                { date: "2026-05-05", type: "Оплата заказа", amount: 89990, status: "success" },
+                { date: "2026-05-05", type: "Оплата заказа", amount: 74990, status: "success" },
+                { date: "2026-05-04", type: "Комиссия Ozon", amount: -4495, status: "success" },
+                { date: "2026-05-04", type: "Логистика", amount: -350, status: "success" },
+                { date: "2026-05-03", type: "Выплата", amount: 150000, status: "success" }
+            ],
+            totalRevenue: 1248450,
+            activeOrders: 3
+        };
+
+        // ========== ФУНКЦИИ API OZON ==========
+        async function testApiKeys(clientId, apiKey) {
+            if (!clientId || !apiKey) {
+                return { success: false, message: "Заполните оба поля" };
+            }
+
+            try {
+                const response = await fetch('https://api-seller.ozon.ru/v1/product/list', {
+                    method: 'POST',
+                    headers: {
+                        'Client-Id': clientId,
+                        'Api-Key': apiKey,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ filter: {}, limit: 1 })
+                });
+
+                if (response.ok) {
+                    return { success: true, message: "✅ API ключи работают! Подключение успешно." };
+                } else if (response.status === 401) {
+                    return { success: false, message: "❌ Неверные Client ID или API Key" };
+                } else if (response.status === 403) {
+                    return { success: false, message: "⚠️ Недостаточно прав. Добавьте права на чтение товаров" };
+                } else {
+                    return { success: false, message: `❌ Ошибка ${response.status}. Проверьте ключи` };
+                }
+            } catch (error) {
+                return { success: false, message: `❌ Ошибка соединения: ${error.message}` };
+            }
+        }
+
+        async function callOzonApi(method, payload) {
+            const response = await fetch(`https://api-seller.ozon.ru/${method}`, {
+                method: 'POST',
+                headers: {
+                    'Client-Id': apiCredentials.clientId,
+                    'Api-Key': apiCredentials.apiKey,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                throw new Error(`API ошибка: ${response.status}`);
+            }
+            return await response.json();
+        }
+
+        // ========== ЗАГРУЗКА ДАННЫХ ==========
+        async function loadRealData(type) {
+            try {
+                if (type === 'dashboard') {
+                    const products = await callOzonApi('v1/product/list', { filter: {}, limit: 100 });
+                    const orders = await callOzonApi('v2/posting/fbs/list', { filter: { status: 'awaiting_packaging' }, limit: 20 });
+                    return { products: products.result.items.length, orders: orders.result.postings.length };
+                }
+                return null;
+            } catch (error) {
+                console.error('API Error:', error);
+                return null;
+            }
+        }
+
+        // ========== UI ОБНОВЛЕНИЯ ==========
+        function updateUIMode() {
+            const isDemo = currentMode === 'demo';
+            const statusBadge = document.getElementById('statusBadge');
+            const demoBtn = document.getElementById('demoModeMain');
+            const realBtn = document.getElementById('realModeMain');
+
+            if (isDemo) {
+                statusBadge.innerHTML = '<i class="fas fa-flask"></i> Демо-режим (тестовые данные)';
+                statusBadge.style.background = '#fff3e0';
+                demoBtn.classList.add('active-mode');
+                realBtn.classList.remove('active-mode');
+
+                // Показываем демо-данные
+                document.getElementById('totalProducts').innerText = demoData.products.length;
+                document.getElementById('activeOrders').innerText = demoData.activeOrders;
+                document.getElementById('totalRevenue').innerText = demoData.totalRevenue.toLocaleString() + ' ₽';
+
+                updateDemoChart();
+                updateDemoProducts();
+                updateDemoOrders();
+                updateDemoFinance();
+            } else {
+                statusBadge.innerHTML = apiCredentials.clientId ?
+                    '<i class="fas fa-check-circle"></i> Реальный API (активен)' :
+                    '<i class="fas fa-exclamation-triangle"></i> Требуется настройка API';
+                statusBadge.style.background = apiCredentials.clientId ? '#d4edda' : '#fff3cd';
+                demoBtn.classList.remove('active-mode');
+                realBtn.classList.add('active-mode');
+
+                if (apiCredentials.clientId && apiCredentials.apiKey) {
+                    loadRealDashboardData();
+                } else {
+                    document.getElementById('settingsPage').style.display = 'block';
+                    document.getElementById('dashboardPage').style.display = 'none';
+                    document.getElementById('productsPage').style.display = 'none';
+                    document.getElementById('ordersPage').style.display = 'none';
+                    document.getElementById('financePage').style.display = 'none';
+                    document.querySelector('.nav-btn.active').classList.remove('active');
+                    document.querySelector('.nav-btn[data-page="settings"]').classList.add('active');
+                }
+            }
+        }
+
+        async function loadRealDashboardData() {
+            document.getElementById('totalProducts').innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
+            document.getElementById('activeOrders').innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
+
+            const data = await loadRealData('dashboard');
+            if (data) {
+                document.getElementById('totalProducts').innerText = data.products;
+                document.getElementById('activeOrders').innerText = data.orders;
+                document.getElementById('totalRevenue').innerText = 'Загрузка...';
+            }
+        }
+
+        function updateDemoChart() {
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            if (salesChart) salesChart.destroy();
+            salesChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['28.04', '29.04', '30.04', '01.05', '02.05', '03.05', '04.05'],
+                    datasets: [{
+                        label: 'Выручка (₽)',
+                        data: [125000, 142000, 168000, 198000, 175000, 212000, 245000],
+                        borderColor: '#1b6b5e',
+                        backgroundColor: 'rgba(27,107,94,0.1)',
+                        borderWidth: 3,
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { position: 'top' }
+                    }
+                }
+            });
+            document.getElementById('chartNote').innerHTML = '📈 Динамика продаж (демо-данные)';
+        }
+
+        function updateDemoProducts() {
+            const search = document.getElementById('productSearch')?.value.toLowerCase() || '';
+            const filtered = demoData.products.filter(p =>
+                p.name.toLowerCase().includes(search) || p.offer_id.toLowerCase().includes(search)
+            );
+
+            let html = '<table><thead><tr><th>Артикул</th><th>Название</th><th>Цена</th><th>Остаток</th></tr></thead><tbody>';
+            filtered.forEach(p => {
+                html += `<tr><td>${p.offer_id}</td><td><strong>${p.name}</strong></td><td>${p.price.toLocaleString()} ₽</td><td>${p.stock} шт.</td></tr>`;
+            });
+            html += '</tbody></table>';
+            document.getElementById('productsList').innerHTML = html;
+        }
+
+        function updateDemoOrders() {
+            const status = document.getElementById('orderStatus').value;
+            const orders = demoData.orders[status] || [];
+
+            if (orders.length === 0) {
+                document.getElementById('ordersList').innerHTML = '<div style="text-align: center; padding: 40px;">Нет заказов</div>';
+                return;
+            }
+
+            let html = '<table><thead><tr><th>Номер</th><th>Сумма</th><th>Дата</th><th>Покупатель</th></tr></thead><tbody>';
+            orders.forEach(o => {
+                html += `<tr><td>${o.number}</td><td>${o.total.toLocaleString()} ₽</td><td>${o.date}</td><td>${o.customer}</td></tr>`;
+            });
+            html += '</tbody></table>';
+            document.getElementById('ordersList').innerHTML = html;
+        }
+
+        function updateDemoFinance() {
+            const total = demoData.transactions.reduce((sum, t) => sum + t.amount, 0);
+            document.getElementById('payoutAmount').innerHTML = total.toLocaleString() + ' ₽';
+            document.getElementById('operationsCount').innerHTML = demoData.transactions.length;
+
+            let html = '<table><thead><tr><th>Дата</th><th>Тип</th><th>Сумма</th></tr></thead><tbody>';
+            demoData.transactions.forEach(t => {
+                const color = t.amount > 0 ? '#1b6b5e' : '#bc3f2e';
+                html += `<tr><td>${t.date}</td><td>${t.type}</td><td style="color: ${color};">${t.amount > 0 ? '+' : ''}${t.amount.toLocaleString()} ₽</td></tr>`;
+            });
+            html += '</tbody></table>';
+            document.getElementById('transactionsList').innerHTML = html;
+            document.getElementById('recentActivity').innerHTML = demoData.transactions.slice(0,3).map(t =>
+                `<div style="padding: 8px 0; border-bottom: 1px solid #eee;">${t.date}: ${t.type} — ${Math.abs(t.amount).toLocaleString()} ₽</div>`
+            ).join('');
+        }
+
+        // ========== НАВИГАЦИЯ ==========
+        function switchPage(page) {
+            document.querySelectorAll('.page-content').forEach(p => p.style.display = 'none');
+            document.getElementById(`${page}Page`).style.display = 'block';
+
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.nav-btn[data-page="${page}"]`).classList.add('active');
+
+            if (page === 'products' && currentMode === 'demo') updateDemoProducts();
+            if (page === 'orders' && currentMode === 'demo') updateDemoOrders();
+        }
+
+        // ========== ИНИЦИАЛИЗАЦИЯ ==========
+        function loadStoredCredentials() {
+            const savedClientId = localStorage.getItem('ozon_client_id');
+            const savedApiKey = localStorage.getItem('ozon_api_key');
+            if (savedClientId && savedApiKey) {
+                apiCredentials.clientId = savedClientId;
+                apiCredentials.apiKey = savedApiKey;
+                document.getElementById('clientId').value = savedClientId;
+                document.getElementById('apiKey').value = savedApiKey;
+            }
+        }
+
+        function saveApiCredentials() {
+            const clientId = document.getElementById('clientId').value.trim();
+            const apiKey = document.getElementById('apiKey').value.trim();
+
+            if (clientId && apiKey) {
+                apiCredentials.clientId = clientId;
+                apiCredentials.apiKey = apiKey;
+                localStorage.setItem('ozon_client_id', clientId);
+                localStorage.setItem('ozon_api_key', apiKey);
+                document.getElementById('apiTestResult').innerHTML = '<div class="test-success">✅ Ключи сохранены!</div>';
+                setTimeout(() => document.getElementById('apiTestResult').innerHTML = '', 3000);
+            }
+        }
+
+        async function testApi() {
+            const clientId = document.getElementById('clientId').value.trim();
+            const apiKey = document.getElementById('apiKey').value.trim();
+            const resultDiv = document.getElementById('apiTestResult');
+
+            resultDiv.innerHTML = '<div class="test-warning"><i class="fas fa-spinner fa-pulse"></i> Тестируем API ключи...</div>';
+
+            const result = await testApiKeys(clientId, apiKey);
+            resultDiv.innerHTML = `<div class="${result.success ? 'test-success' : 'test-error'}">${result.message}</div>`;
+
+            if (result.success) {
+                setTimeout(() => {
+                    if (confirm('API ключи работают! Переключиться на реальный режим?')) {
+                        currentMode = 'real';
+                        updateUIMode();
+                        switchPage('dashboard');
+                    }
+                }, 1000);
+            }
+        }
+
+        function clearApi() {
+            localStorage.removeItem('ozon_client_id');
+            localStorage.removeItem('ozon_api_key');
+            apiCredentials = { clientId: '', apiKey: '' };
+            document.getElementById('clientId').value = '';
+            document.getElementById('apiKey').value = '';
+            document.getElementById('apiTestResult').innerHTML = '<div class="test-success">🗑️ Ключи удалены</div>';
+            setTimeout(() => document.getElementById('apiTestResult').innerHTML = '', 2000);
+
+            if (currentMode === 'real') {
+                currentMode = 'demo';
+                updateUIMode();
+            }
+        }
+
+        // Event Listeners
+        document.getElementById('demoModeMain').addEventListener('click', () => {
+            currentMode = 'demo';
+            updateUIMode();
+            switchPage('dashboard');
+        });
+
+        document.getElementById('realModeMain').addEventListener('click', () => {
+            if (!apiCredentials.clientId) {
+                alert('Сначала настройте API ключи в разделе "Настройки"');
+                switchPage('settings');
+            } else {
+                currentMode = 'real';
+                updateUIMode();
+                switchPage('dashboard');
+            }
+        });
+
+        document.getElementById('testApiBtn').addEventListener('click', testApi);
+        document.getElementById('saveApiBtn').addEventListener('click', saveApiCredentials);
+        document.getElementById('clearApiBtn').addEventListener('click', clearApi);
+
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => switchPage(btn.getAttribute('data-page')));
+        });
+
+        if (document.getElementById('productSearch')) {
+            document.getElementById('productSearch').addEventListener('input', () => updateDemoProducts());
+        }
+
+        if (document.getElementById('orderStatus')) {
+            document.getElementById('orderStatus').addEventListener('change', () => updateDemoOrders());
+        }
+
+        // Старт
+        loadStoredCredentials();
+        updateUIMode();
+        switchPage('dashboard');
+    </script>
+</body>
+</html>
