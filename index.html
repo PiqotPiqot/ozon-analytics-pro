@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>Ozon Analytics Pro — Универсальная аналитика</title>
+    <title>Ozon Analytics Pro — Аналитика для продавцов</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -22,17 +22,26 @@
             line-height: 1.4;
         }
 
-        /* Анимации */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shine {
+            0% { background-position: -100% 0; }
+            100% { background-position: 200% 0; }
         }
 
         .page-content {
             animation: fadeIn 0.3s ease;
         }
 
-        /* Header */
         .main-header {
             background: white;
             padding: 16px 24px;
@@ -106,7 +115,6 @@
             gap: 8px;
         }
 
-        /* Navigation */
         .nav-container {
             background: white;
             border-radius: 20px;
@@ -115,19 +123,27 @@
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
+            justify-content: center;
         }
 
         .nav-btn {
             padding: 12px 24px;
             border-radius: 16px;
             border: none;
-            background: transparent;
+            background: #f0f2f5;
             cursor: pointer;
-            font-weight: 500;
+            font-weight: 600;
             transition: all 0.2s;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            font-size: 0.95rem;
+            color: #1e4a44;
+        }
+
+        .nav-btn i {
+            font-size: 1.2rem;
+            color: #1b6b5e;
         }
 
         .nav-btn.active {
@@ -135,7 +151,15 @@
             color: white;
         }
 
-        /* Cards */
+        .nav-btn.active i {
+            color: white;
+        }
+
+        .nav-btn:hover {
+            background: #e0e8e5;
+            transform: translateY(-2px);
+        }
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -161,13 +185,17 @@
             margin-bottom: 12px;
         }
 
+        .stat-card h4 i {
+            margin-right: 8px;
+            color: #1b6b5e;
+        }
+
         .stat-number {
             font-size: 2rem;
             font-weight: 800;
             color: #0b2b26;
         }
 
-        /* Auth Card */
         .auth-card {
             background: linear-gradient(135deg, #ffffff, #f9fbfa);
             border-radius: 20px;
@@ -213,6 +241,7 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            font-size: 0.9rem;
         }
 
         button:hover {
@@ -225,17 +254,23 @@
             color: #1e4a44;
         }
 
-        button.danger {
-            background: #dc3545;
-        }
-
-        /* Таблицы */
         .data-table {
             background: white;
             border-radius: 20px;
             padding: 20px;
             overflow-x: auto;
             margin-top: 20px;
+        }
+
+        .data-table h3 {
+            margin-bottom: 16px;
+            color: #0b2b26;
+            font-size: 1.1rem;
+        }
+
+        .data-table h3 i {
+            margin-right: 8px;
+            color: #1b6b5e;
         }
 
         table {
@@ -254,7 +289,6 @@
             color: #2b594f;
         }
 
-        /* Тестирование API */
         .test-result {
             margin-top: 12px;
             padding: 10px;
@@ -302,6 +336,105 @@
             margin: 12px 0;
         }
 
+        /* ========== КРАСИВАЯ ССЫЛКА ДЛЯ QR ========== */
+        .qr-link-wrapper {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #1b6b5e 100%);
+            background-size: 200% 200%;
+            border-radius: 20px;
+            margin-bottom: 24px;
+            padding: 4px;
+            animation: shine 3s ease infinite;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .qr-link-wrapper:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.2);
+        }
+
+        .qr-link-content {
+            background: rgba(255,255,255,0.98);
+            border-radius: 16px;
+            padding: 20px 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .qr-link-wrapper:hover .qr-link-content {
+            background: white;
+        }
+
+        .qr-link-main {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            text-decoration: none;
+        }
+
+        .qr-icon {
+            background: linear-gradient(135deg, #1b6b5e, #0f4d43);
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 1.5s infinite;
+        }
+
+        .qr-icon i {
+            font-size: 2.5rem;
+            color: white;
+        }
+
+        .qr-text-block {
+            text-align: left;
+        }
+
+        .qr-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1b6b5e, #764ba2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+
+        .qr-subtitle {
+            font-size: 0.85rem;
+            color: #5e7c76;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .qr-arrow {
+            background: #1b6b5e;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .qr-arrow i {
+            font-size: 1.3rem;
+            color: white;
+        }
+
+        .qr-link-wrapper:hover .qr-arrow {
+            transform: translateX(8px);
+            background: #764ba2;
+        }
+
         footer {
             text-align: center;
             margin-top: 40px;
@@ -321,14 +454,30 @@
             .nav-container {
                 justify-content: center;
             }
-            .nav-btn span {
-                display: none;
-            }
-            .nav-btn i {
-                font-size: 1.2rem;
-            }
             .nav-btn {
-                padding: 12px;
+                padding: 10px 16px;
+                font-size: 0.85rem;
+            }
+            .qr-link-main {
+                flex-direction: column;
+                text-align: center;
+            }
+            .qr-text-block {
+                text-align: center;
+            }
+            .qr-title {
+                font-size: 1.1rem;
+            }
+            .qr-icon {
+                width: 55px;
+                height: 55px;
+            }
+            .qr-icon i {
+                font-size: 1.8rem;
+            }
+            .qr-arrow {
+                width: 40px;
+                height: 40px;
             }
         }
     </style>
@@ -352,6 +501,29 @@
             </div>
         </div>
 
+        <!-- КРАСИВАЯ ССЫЛКА QR-КОД (БЕЗ ПОДЧЁРКИВАНИЯ) -->
+        <div class="qr-link-wrapper" onclick="window.open('http://qrcoder.ru/code/?https%3A%2F%2Fpiqotpiqot.github.io%2Fozon-analytics-pro%2F&4&0', '_blank')">
+            <div class="qr-link-content">
+                <div class="qr-link-main">
+                    <div class="qr-icon">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <div class="qr-text-block">
+                        <div class="qr-title">
+                            📱 СКАНИРУЙТЕ QR-КОД
+                        </div>
+                        <div class="qr-subtitle">
+                            <i class="fas fa-mobile-alt"></i>
+                            <span>Откройте на телефоне для удобной работы с аналитикой</span>
+                        </div>
+                    </div>
+                    <div class="qr-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Navigation -->
         <div class="nav-container">
             <button class="nav-btn active" data-page="dashboard">
@@ -371,7 +543,7 @@
             </button>
         </div>
 
-        <!-- Settings Page (API настройки) -->
+        <!-- Settings Page -->
         <div id="settingsPage" class="page-content" style="display: none;">
             <div class="auth-card">
                 <h2><i class="fas fa-key"></i> Настройка API Ozon</h2>
@@ -396,7 +568,7 @@
 
                 <div style="margin-top: 20px; padding: 16px; background: #e8f0ed; border-radius: 12px;">
                     <h4><i class="fas fa-question-circle"></i> Как получить API ключи?</h4>
-                    <ol style="margin-left: 20px; margin-top: 10px;">
+                    <ol style="margin-left: 20px; margin-top: 10px; line-height: 1.6;">
                         <li>Войдите в кабинет продавца Ozon (seller.ozon.ru)</li>
                         <li>Перейдите: Настройки → API ключи → Seller API</li>
                         <li>Нажмите "Сгенерировать ключ"</li>
@@ -462,29 +634,30 @@
         <div id="financePage" class="page-content" style="display: none;">
             <div class="stats-grid" style="grid-template-columns: 1fr 1fr;">
                 <div class="stat-card">
-                    <h4>💰 К выплате</h4>
+                    <h4><i class="fas fa-wallet"></i> К выплате</h4>
                     <div class="stat-number" id="payoutAmount">—</div>
                 </div>
                 <div class="stat-card">
-                    <h4>📊 Всего операций</h4>
+                    <h4><i class="fas fa-chart-line"></i> Всего операций</h4>
                     <div class="stat-number" id="operationsCount">—</div>
                 </div>
             </div>
             <div class="data-table">
-                <h3>📋 Движение средств</h3>
+                <h3><i class="fas fa-receipt"></i> Движение средств</h3>
                 <div id="transactionsList"></div>
             </div>
         </div>
 
         <footer>
             <i class="fas fa-shield-alt"></i> API ключи хранятся только в вашем браузере |
+            <i class="fas fa-mobile-alt"></i> Нажмите на QR-баннер для быстрого доступа с телефона |
             <i class="fas fa-github"></i> Бесплатно для всех продавцов Ozon
         </footer>
     </div>
 
     <script>
         // ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
-        let currentMode = 'demo'; // demo or real
+        let currentMode = 'demo';
         let apiCredentials = { clientId: '', apiKey: '' };
         let salesChart = null;
 
@@ -513,11 +686,11 @@
                 cancelled: []
             },
             transactions: [
-                { date: "2026-05-05", type: "Оплата заказа", amount: 89990, status: "success" },
-                { date: "2026-05-05", type: "Оплата заказа", amount: 74990, status: "success" },
-                { date: "2026-05-04", type: "Комиссия Ozon", amount: -4495, status: "success" },
-                { date: "2026-05-04", type: "Логистика", amount: -350, status: "success" },
-                { date: "2026-05-03", type: "Выплата", amount: 150000, status: "success" }
+                { date: "2026-05-05", type: "Оплата заказа", amount: 89990 },
+                { date: "2026-05-05", type: "Оплата заказа", amount: 74990 },
+                { date: "2026-05-04", type: "Комиссия Ozon", amount: -4495 },
+                { date: "2026-05-04", type: "Логистика", amount: -350 },
+                { date: "2026-05-03", type: "Выплата", amount: 150000 }
             ],
             totalRevenue: 1248450,
             activeOrders: 3
@@ -571,7 +744,6 @@
             return await response.json();
         }
 
-        // ========== ЗАГРУЗКА ДАННЫХ ==========
         async function loadRealData(type) {
             try {
                 if (type === 'dashboard') {
@@ -599,7 +771,6 @@
                 demoBtn.classList.add('active-mode');
                 realBtn.classList.remove('active-mode');
 
-                // Показываем демо-данные
                 document.getElementById('totalProducts').innerText = demoData.products.length;
                 document.getElementById('activeOrders').innerText = demoData.activeOrders;
                 document.getElementById('totalRevenue').innerText = demoData.totalRevenue.toLocaleString() + ' ₽';
@@ -678,7 +849,12 @@
 
             let html = '<table><thead><tr><th>Артикул</th><th>Название</th><th>Цена</th><th>Остаток</th></tr></thead><tbody>';
             filtered.forEach(p => {
-                html += `<tr><td>${p.offer_id}</td><td><strong>${p.name}</strong></td><td>${p.price.toLocaleString()} ₽</td><td>${p.stock} шт.</td></tr>`;
+                html += `<tr>
+                            <td>${p.offer_id}</td>
+                            <td><strong>${p.name}</strong></td>
+                            <td>${p.price.toLocaleString()} ₽</td>
+                            <td>${p.stock} шт.</td>
+                        </tr>`;
             });
             html += '</tbody></table>';
             document.getElementById('productsList').innerHTML = html;
@@ -693,9 +869,14 @@
                 return;
             }
 
-            let html = '<table><thead><tr><th>Номер</th><th>Сумма</th><th>Дата</th><th>Покупатель</th></tr></thead><tbody>';
+            let html = '<tr><thead><tr><th>Номер</th><th>Сумма</th><th>Дата</th><th>Покупатель</th></tr></thead><tbody>';
             orders.forEach(o => {
-                html += `<tr><td>${o.number}</td><td>${o.total.toLocaleString()} ₽</td><td>${o.date}</td><td>${o.customer}</td></tr>`;
+                html += `<tr>
+                            <td>${o.number}</td>
+                            <td>${o.total.toLocaleString()} ₽</td>
+                            <td>${o.date}</td>
+                            <td>${o.customer}</td>
+                        </tr>`;
             });
             html += '</tbody></table>';
             document.getElementById('ordersList').innerHTML = html;
@@ -709,7 +890,11 @@
             let html = '<table><thead><tr><th>Дата</th><th>Тип</th><th>Сумма</th></tr></thead><tbody>';
             demoData.transactions.forEach(t => {
                 const color = t.amount > 0 ? '#1b6b5e' : '#bc3f2e';
-                html += `<tr><td>${t.date}</td><td>${t.type}</td><td style="color: ${color};">${t.amount > 0 ? '+' : ''}${t.amount.toLocaleString()} ₽</td></tr>`;
+                html += `<tr>
+                            <td>${t.date}</td>
+                            <td>${t.type}</td>
+                            <td style="color: ${color}; font-weight: 600;">${t.amount > 0 ? '+' : ''}${t.amount.toLocaleString()} ₽</td>
+                        </tr>`;
             });
             html += '</tbody></table>';
             document.getElementById('transactionsList').innerHTML = html;
@@ -728,6 +913,7 @@
 
             if (page === 'products' && currentMode === 'demo') updateDemoProducts();
             if (page === 'orders' && currentMode === 'demo') updateDemoOrders();
+            if (page === 'finance' && currentMode === 'demo') updateDemoFinance();
         }
 
         // ========== ИНИЦИАЛИЗАЦИЯ ==========
